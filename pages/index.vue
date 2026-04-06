@@ -7,35 +7,22 @@ import type { Motiv } from '~/types/Motiv';
 definePageMeta({
     layout: 'shirt-editor',
     title: 'Design your Shirt'
-})
+});
 
-const orderStore = useOrderStore()
+const orderStore = useOrderStore();
 
-const [{ data: colorsData }, { data: motivesData }] = await Promise.all([
-    useFetch<Color[]>('/api/colors'),
-    useFetch<Motiv[]>('/api/motives')
-])
-
-if (!orderStore.initialized && colorsData.value && motivesData.value) {
-    orderStore.setColors(colorsData.value)
-    orderStore.setMotives(motivesData.value)
-    orderStore.setColor(colorsData.value[0])
-    orderStore.setMotiv(motivesData.value[0])
-    orderStore.initialized = true
-}
+await orderStore.init();
 
 const { color, motiv, colors, motives } = storeToRefs(orderStore);
 
 const handleColorSelect = (color: Color) => {
-    orderStore.setColor(color)
-}
+    orderStore.setColor(color);
+};
 
 const handleMotivSelect = (motiv: Motiv) => {
-    orderStore.setMotiv(motiv)
-}
-
+    orderStore.setMotiv(motiv);
+};
 </script>
-
 <template>
     <div class="flex justify-between flex-col md:flex-row items-center h-full gap-4">
         <ColorCarousel :selected-color="color" :colors="colors" @select="handleColorSelect" />
